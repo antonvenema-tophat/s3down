@@ -11,9 +11,11 @@ const client = new S3Client({
   }),
 });
 
+const bucket = "tophat-cost-and-usage-reports";
+
 (async () => {
   const listObjectsResponse = await client.send(new ListObjectsV2Command({
-    Bucket: "tophat-cost-and-usage-reports",
+    Bucket: bucket,
     Prefix: "cur/DetailedBilling/20240901-20241001/",
   }));
   if (!listObjectsResponse.Contents) {
@@ -34,7 +36,7 @@ const client = new S3Client({
 
     console.info(chalk.green(`${index++}/${listObjectsResponse.KeyCount} (${(object.Size / 1000000).toLocaleString()} MB) ${object.Key}`));
     const getObjectResponse = await client.send(new GetObjectCommand({
-      Bucket: "thm-billing",
+      Bucket: bucket,
       Key: object.Key,
     }));
     if (!getObjectResponse.Body) continue;
